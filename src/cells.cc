@@ -1,18 +1,19 @@
 #include "cells.h"
 #include "utility.h"
 
-Cells::Cells() {
+Cells::Cells(std::pair<unsigned, unsigned> survival, std::pair<unsigned, unsigned> birth, unsigned short setting) 
+    : survivalRange{survival}, birthRange{birth}, neighbourhood{setting} {
     glGenVertexArrays(1, &VAO);
     glGenBuffers     (1, &VBO);
     glGenBuffers     (1, &EBO);
 
     shaderInit();
     projection = glm::perspective(glm::radians(60.0f), 1.8f, 0.1f, 1000.0f);
-    cells[51][1][51] = true;
-    cells[51][1][52] = true;
-    cells[51][1][53] = true;
-    cells[52][1][53] = true;
-    cells[53][1][52] = true;
+    cells[25][1][24] = true;
+    cells[25][1][25] = true;
+    cells[25][1][26] = true;
+    cells[26][1][25] = true;
+    cells[27][1][26] = true;
 }
 
 void Cells::shaderInit() {
@@ -208,11 +209,11 @@ void Cells::progress() {
 
 // Iterate over all cells and check for neighbours
 void Cells::countNeighbours() {
-    std::array<std::array<std::array<bool, 100>, 100>, 100> nextCells;
+    std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth> nextCells;
     for (int x{0}; x < cells.size(); ++x) {
         for (int y{0}; y < cells[x].size(); ++y) {
             for (int z{0}; z < cells[x][y].size(); ++z) {
-                countNeighbours(x, y, z, nextCells);
+                countNeighboursMoore(x, y, z, nextCells);
             }
         }
     }
@@ -220,7 +221,7 @@ void Cells::countNeighbours() {
 }
 
 // Iterate over all neighbours of a cell and check if they are alive
-void Cells::countNeighbours(int ix, int iy, int iz, std::array<std::array<std::array<bool, 100>, 100>, 100>& nextCells) {
+void Cells::countNeighboursMoore(int ix, int iy, int iz, std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth>& nextCells) {
     int count{0};
     for (int x{ix - 1}; x <= (ix + 1); ++x) {
         for (int y{iy - 1}; y <= (iy + 1); ++y) {
@@ -237,13 +238,11 @@ void Cells::countNeighbours(int ix, int iy, int iz, std::array<std::array<std::a
         }
     }
 
-    if (count == 2) {
+    if (count >= survivalRange.first && count <= survivalRange.second) {
         nextCells[ix][iy][iz] = cells[ix][iy][iz];
-    } else if (count == 3) {
+    } else if (count >= birthRange.first && count <= birthRange.second) {
         nextCells[ix][iy][iz] = true;
-    } else if (count >= 4) {
+    } else {
         nextCells[ix][iy][iz] = false;
-    } else if (count <= 1){
-        nextCells[ix][iy][iz] = false;
-    } 
+    }
 }

@@ -3,7 +3,17 @@
 
 #include <iostream>
 
-Game::Game() {
+Game::Game(std::pair<unsigned, unsigned> survival, std::pair<unsigned, unsigned> birth, unsigned short neighbourhood) {
+    initGame();
+    cells = new Cells{survival, birth, neighbourhood};
+}
+
+Game::~Game() {
+    delete cells;
+    glfwTerminate();
+}
+
+void Game::initGame() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -53,13 +63,7 @@ Game::Game() {
         std::cerr << "OpenGL error: " << error << std::endl;
     }
 
-    cells = new Cells{};
     camera = new Camera{};
-}
-
-Game::~Game() {
-    delete cells;
-    glfwTerminate();
 }
 
 void Game::gameLoop() {
@@ -115,7 +119,7 @@ void Game::mouseMotionCallback(double xposIn, double yposIn) {
 void Game::progressCallback(int key, int scancode, int actions, int mods) {
     if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
         cells->progress();
-        std::cout << "Progressed one step" << std::endl;
+        //std::cout << "Progressed one step" << std::endl;
     }
 }
 

@@ -22,8 +22,8 @@ public:
     
     void processMovement(GLFWwindow*, float);
 protected:
-    glm::vec3 cameraPos = glm::vec3(1.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);
+    glm::vec3 cameraPos = glm::vec3(6.5f, 6.0f, 25.0f);
+    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 velocity = glm::vec3(1.0f);
 

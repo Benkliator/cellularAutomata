@@ -6,13 +6,14 @@
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 #include <glm/mat4x4.hpp>
+#include <utility>
 
 const unsigned SCR_WIDTH = 1620;
 const unsigned SCR_HEIGHT = 900;
 
 class Game {
 public:
-    Game();
+    Game(std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned>, unsigned short);
     ~Game();
 
     void gameLoop();
@@ -20,6 +21,7 @@ public:
     void progressCallback(int, int, int, int);
 private:
     void processInput(float);
+    void initGame();
 
     Cells* cells = nullptr;
     Camera* camera = nullptr;

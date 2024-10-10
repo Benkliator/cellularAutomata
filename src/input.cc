@@ -61,4 +61,5 @@ void Camera::processMovement(GLFWwindow* window, float delta) {
     velocity.z /= 2.8;
 
     cameraPos += velocity * delta;
+    //std::cout << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << std::endl;
 }
