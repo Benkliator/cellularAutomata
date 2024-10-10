@@ -31,7 +31,7 @@ public:
     };
 private:
     void countNeighbours();
-    void countNeighboursMoore(int, int, int, std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth>&);
+    void countNeighbours(int, int, int, std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth>&);
 
     void loadFace(const MeshData*, unsigned, unsigned, unsigned);
     std::array<ushort, 4> getOcclusion(unsigned x, unsigned y, unsigned z, unsigned short face);

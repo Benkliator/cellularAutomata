@@ -213,7 +213,7 @@ void Cells::countNeighbours() {
     for (int x{0}; x < cells.size(); ++x) {
         for (int y{0}; y < cells[x].size(); ++y) {
             for (int z{0}; z < cells[x][y].size(); ++z) {
-                countNeighboursMoore(x, y, z, nextCells);
+                countNeighbours(x, y, z, nextCells);
             }
         }
     }
@@ -221,7 +221,7 @@ void Cells::countNeighbours() {
 }
 
 // Iterate over all neighbours of a cell and check if they are alive
-void Cells::countNeighboursMoore(int ix, int iy, int iz, std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth>& nextCells) {
+void Cells::countNeighbours(int ix, int iy, int iz, std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth>& nextCells) {
     int count{0};
     for (int x{ix - 1}; x <= (ix + 1); ++x) {
         for (int y{iy - 1}; y <= (iy + 1); ++y) {
@@ -231,8 +231,15 @@ void Cells::countNeighboursMoore(int ix, int iy, int iz, std::array<std::array<s
                     (x >= boardWidth || y >= boardWidth || z >= boardWidth)) {
                     continue;
                 }
-                if (cells[x][y][z]) {
-                    ++count;
+                if (neighbourhood == Cells::MOORE) {
+                    if (cells[x][y][z]) {
+                        ++count;
+                    }
+                } else {
+                    if (std::abs((x - ix) + (y - iy) + (z - iz)) == 1 && 
+                        cells[x][y][z]) {
+                        ++count;
+                    }
                 }
             }
         }

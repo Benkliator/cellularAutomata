@@ -19,9 +19,10 @@ int parseRules(std::pair<unsigned, unsigned>& target, std::string from) {
 int main(int argc, char* argv[]) {
     std::pair<unsigned, unsigned> survival{4, 4};
     std::pair<unsigned, unsigned> birth{3, 3};
+    unsigned short setting;
     if (argc != 2) {
         std::cerr << "Too few arguments! " << std::endl
-                  << "Usage: " << argv [0] << " <RANGE>/<RANGE>/<SETTING>" << std::endl;
+                  << "Usage: " << argv [0] << " <SURVIVAL_RANGE>/<BIRTH_RANGE>/<SETTING>" << std::endl;
         return 1;
     }
 
@@ -35,13 +36,16 @@ int main(int argc, char* argv[]) {
         }
         if (ruleList.size() != 3) {
             std::cerr << "WRONG USAGE!" << std::endl
-                      << "Usage: " << argv [0] << " <RANGE>/<RANGE>/<SETTING>" << std::endl;
+                      << "Usage: " << argv [0] << " <SURVIVAL_RANGE>/<BIRTH_RANGE>/<SETTING>" << std::endl;
             return 1;
         }
     }
 
     parseRules(survival, ruleList[0]);
     parseRules(birth, ruleList[1]);
-    Game game{survival, birth, 1};
+
+    (ruleList[2] == "N") ? setting = Cells::NEUMANN : setting = Cells::MOORE; 
+
+    Game game{survival, birth, setting};
     game.gameLoop();
 }
