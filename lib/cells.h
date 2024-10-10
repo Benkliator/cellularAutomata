@@ -14,12 +14,14 @@
 #include <vector>
 #include <cstdint>
 #include <iostream>
+#include <cstdint>
 
-const unsigned boardWidth = 50;
+
+const unsigned boardWidth = 75;
 
 class Cells {
 public:
-    Cells(std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned>, unsigned short);
+    Cells(std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned>, uint_fast8_t, unsigned short);
 
     void generateMesh();
     void draw(glm::mat4&);
@@ -31,13 +33,13 @@ public:
     };
 private:
     void countNeighbours();
-    void countNeighbours(int, int, int, std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth>&);
+    void countNeighbours(int, int, int, std::array<std::array<std::array<uint_fast8_t, boardWidth>, boardWidth>, boardWidth>&);
 
     void loadFace(const MeshData*, unsigned, unsigned, unsigned);
     std::array<ushort, 4> getOcclusion(unsigned x, unsigned y, unsigned z, unsigned short face);
     void shaderInit();
     void renderInit();
-    std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth> cells{false};
+    std::array<std::array<std::array<uint_fast8_t, boardWidth>, boardWidth>, boardWidth> cells{false};
 
     std::vector<GLuint> indexMesh;
     std::vector<GLuint> vertexMesh;
@@ -52,6 +54,7 @@ private:
 
     std::pair<unsigned, unsigned> survivalRange;
     std::pair<unsigned, unsigned> birthRange;
+    uint_fast8_t lifetime;
     unsigned short neighbourhood;
 
     glm::mat4 projection;

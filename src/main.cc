@@ -19,10 +19,11 @@ int parseRules(std::pair<unsigned, unsigned>& target, std::string from) {
 int main(int argc, char* argv[]) {
     std::pair<unsigned, unsigned> survival{4, 4};
     std::pair<unsigned, unsigned> birth{3, 3};
+    uint_fast8_t lifetime;
     unsigned short setting;
     if (argc != 2) {
         std::cerr << "Too few arguments! " << std::endl
-                  << "Usage: " << argv [0] << " <SURVIVAL_RANGE>/<BIRTH_RANGE>/<SETTING>" << std::endl;
+                  << "Usage: " << argv [0] << " <SURVIVAL_RANGE>/<BIRTH_RANGE>/<DECAY_TIME>/<SETTING>" << std::endl;
         return 1;
     }
 
@@ -34,18 +35,19 @@ int main(int argc, char* argv[]) {
         while (std::getline(sstream, ruleSplit, '/')) {
             ruleList.push_back(ruleSplit);
         }
-        if (ruleList.size() != 3) {
+        if (ruleList.size() != 4) {
             std::cerr << "WRONG USAGE!" << std::endl
-                      << "Usage: " << argv [0] << " <SURVIVAL_RANGE>/<BIRTH_RANGE>/<SETTING>" << std::endl;
+                      << "Usage: " << argv [0] << " <SURVIVAL_RANGE>/<BIRTH_RANGE>/<DECAY_TIME>/<SETTING>" << std::endl;
             return 1;
         }
     }
 
     parseRules(survival, ruleList[0]);
     parseRules(birth, ruleList[1]);
+    lifetime = std::stoi(ruleList[2]);
 
-    (ruleList[2] == "N") ? setting = Cells::NEUMANN : setting = Cells::MOORE; 
+    (ruleList[3] == "N") ? setting = Cells::NEUMANN : setting = Cells::MOORE; 
 
-    Game game{survival, birth, setting};
+    Game game{survival, birth, lifetime, setting};
     game.gameLoop();
 }

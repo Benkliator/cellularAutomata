@@ -13,7 +13,7 @@ const unsigned SCR_HEIGHT = 900;
 
 class Game {
 public:
-    Game(std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned>, unsigned short);
+    Game(std::pair<unsigned, unsigned>, std::pair<unsigned, unsigned>, uint_fast8_t, unsigned short);
     ~Game();
 
     void gameLoop();

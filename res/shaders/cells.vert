@@ -26,7 +26,7 @@ void main(void)
             break;
     }
 
-    color = vec3(vec3(vertex.xyz) / 50);
+    color = vec3(vec3(vertex.xyz) / 75);
 
     gl_Position = projection * view * vec4(vertex.xyz * 0.25, 1.0);
 }

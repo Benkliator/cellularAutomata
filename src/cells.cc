@@ -1,20 +1,24 @@
 #include "cells.h"
 #include "utility.h"
 
-Cells::Cells(std::pair<unsigned, unsigned> survival, std::pair<unsigned, unsigned> birth, unsigned short setting) 
-    : survivalRange{survival}, birthRange{birth}, neighbourhood{setting} {
+Cells::Cells(std::pair<unsigned, unsigned> survival, 
+             std::pair<unsigned, unsigned> birth, 
+             uint_fast8_t lt,
+             unsigned short setting) 
+    : survivalRange{survival}, birthRange{birth}, lifetime{lt}, neighbourhood{setting} {
     glGenVertexArrays(1, &VAO);
     glGenBuffers     (1, &VBO);
     glGenBuffers     (1, &EBO);
 
     shaderInit();
     projection = glm::perspective(glm::radians(60.0f), 1.8f, 0.1f, 1000.0f);
-    cells[25][1][24] = true;
-    cells[25][1][25] = true;
-    cells[25][1][26] = true;
-    cells[26][1][25] = true;
-    cells[27][1][26] = true;
+    cells[25][1][24] = lifetime;
+    cells[25][1][25] = lifetime;
+    cells[25][1][26] = lifetime;
+    cells[26][1][25] = lifetime;
+    cells[27][1][26] = lifetime;
 }
+
 
 void Cells::shaderInit() {
     unsigned vertexShader =
@@ -209,7 +213,7 @@ void Cells::progress() {
 
 // Iterate over all cells and check for neighbours
 void Cells::countNeighbours() {
-    std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth> nextCells;
+    std::array<std::array<std::array<uint_fast8_t, boardWidth>, boardWidth>, boardWidth> nextCells;
     for (int x{0}; x < cells.size(); ++x) {
         for (int y{0}; y < cells[x].size(); ++y) {
             for (int z{0}; z < cells[x][y].size(); ++z) {
@@ -221,7 +225,7 @@ void Cells::countNeighbours() {
 }
 
 // Iterate over all neighbours of a cell and check if they are alive
-void Cells::countNeighbours(int ix, int iy, int iz, std::array<std::array<std::array<bool, boardWidth>, boardWidth>, boardWidth>& nextCells) {
+void Cells::countNeighbours(int ix, int iy, int iz, std::array<std::array<std::array<uint_fast8_t, boardWidth>, boardWidth>, boardWidth>& nextCells) {
     int count{0};
     for (int x{ix - 1}; x <= (ix + 1); ++x) {
         for (int y{iy - 1}; y <= (iy + 1); ++y) {
@@ -246,10 +250,20 @@ void Cells::countNeighbours(int ix, int iy, int iz, std::array<std::array<std::a
     }
 
     if (count >= survivalRange.first && count <= survivalRange.second) {
-        nextCells[ix][iy][iz] = cells[ix][iy][iz];
+        if (cells[ix][iy][iz]) {
+            nextCells[ix][iy][iz] = cells[ix][iy][iz];
+        }
     } else if (count >= birthRange.first && count <= birthRange.second) {
-        nextCells[ix][iy][iz] = true;
+        if (cells[ix][iy][iz]) {
+            nextCells[ix][iy][iz] = cells[ix][iy][iz];
+        } else {
+            nextCells[ix][iy][iz] = lifetime;
+        }
     } else {
-        nextCells[ix][iy][iz] = false;
+        if (cells[ix][iy][iz]) {
+            nextCells[ix][iy][iz] = cells[ix][iy][iz] - 1;
+        } else {
+            nextCells[ix][iy][iz] = 0;
+        }
     }
 }

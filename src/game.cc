@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-Game::Game(std::pair<unsigned, unsigned> survival, std::pair<unsigned, unsigned> birth, unsigned short neighbourhood) {
+Game::Game(std::pair<unsigned, unsigned> survival, std::pair<unsigned, unsigned> birth, uint_fast8_t lifetime, unsigned short neighbourhood) {
     initGame();
-    cells = new Cells{survival, birth, neighbourhood};
+    cells = new Cells{survival, birth, lifetime, neighbourhood};
 }
 
 Game::~Game() {
